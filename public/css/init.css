@@ -1,0 +1,33 @@
+html{
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background-color: #292727;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.content, .jumbotron{
+    color: #fff;
+    text-align: center;
+    background-color: #292727 !important;
+}
+
+.form-text{
+    width: 400px;
+    margin: 0 auto;
+}
+
+* {
+  -webkit-border-radius: 0 !important;
+     -moz-border-radius: 0 !important;
+          border-radius: 0 !important;
+}
+
+button {
+    padding-left: 2em !important;
+    padding-right: 2em !important; 
+}

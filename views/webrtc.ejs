@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>OpenTok WebRTC</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/css/sweetalert.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+</head>
+<body>
+    <div id="videos">
+        <div class="video-container" id="publisher">
+        </div>
+
+        <div class="video-container" id="subscribers">
+        </div>
+    </div>
+
+    <div id="chat">
+        <div id="messages" class="message-content-body row">
+            <!--<div class="col-xs-12">
+                <div class="msg-subscribers">
+                    <div class="arrow-left"></div>
+                    <div class="msg-content">Hello</div>
+                </div>
+            </div>
+
+            <div class="col-xs-12">
+                <div class="msg-publisher">
+                    <div class="arrow-right"></div>
+                    <div class="msg-content">Hello man</div>
+                </div>
+            </div>-->
+
+        </div>
+
+        <div class="text">
+            <textarea name="msj" rows="5" id="msj"></textarea>
+        </div>
+    </div>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="actions">
+            <ul>
+                <li>
+                    <button type="button" class="btn btn-default">
+                        <span class="glyphicon glyphicon-paperclip"></span>
+                    </button>
+                </li>
+                <li>
+                    <button type="button" class="btn btn-default">
+                        <span class="glyphicon glyphicon-link"></span>
+                    </button>
+                </li>
+                <li>
+                    <button type="button" class="btn btn-default" id="displayChat">
+                        <span class="glyphicon glyphicon-comment"></span>
+                    </button>
+                </li>
+            </ul>
+        </div>
+      </div>
+    </footer>
+
+    <script src="//static.opentok.com/v2.2/js/opentok.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/rxjs/4.0.7/rx.all.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.1/sweetalert.min.js"></script>
+    <script src="/dist/js/chat.js"></script>
+    <script src="/dist/js/room.js"></script>
+    <script src="/dist/js/dom.js"></script>
+    <script type="text/javascript">
+        var session = OT.initSession('<%= apiKey %>', '<%= sessid %>');
+        var chat = new Chat('messages', 'msj', '<%= room %>', session);
+        var room = new Room('<%= room %>', '<%= apiKey %>', session, '<%= token %>', chat);
+    </script>
+</body>
+</html>
