@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <title>OpenTok WebRTC</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/css/responsive.css">
     <link rel="stylesheet" type="text/css" href="/css/sweetalert.css">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
@@ -19,19 +20,6 @@
 
     <div id="chat">
         <div id="messages" class="message-content-body row">
-            <!--<div class="col-xs-12">
-                <div class="msg-subscribers">
-                    <div class="arrow-left"></div>
-                    <div class="msg-content">Hello</div>
-                </div>
-            </div>
-
-            <div class="col-xs-12">
-                <div class="msg-publisher">
-                    <div class="arrow-right"></div>
-                    <div class="msg-content">Hello man</div>
-                </div>
-            </div>-->
 
         </div>
 
@@ -45,12 +33,7 @@
         <div class="actions">
             <ul>
                 <li>
-                    <button type="button" class="btn btn-default">
-                        <span class="glyphicon glyphicon-paperclip"></span>
-                    </button>
-                </li>
-                <li>
-                    <button type="button" class="btn btn-default">
+                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#linkModal">
                         <span class="glyphicon glyphicon-link"></span>
                     </button>
                 </li>
@@ -64,18 +47,39 @@
       </div>
     </footer>
 
+    <div class="modal fade" id="linkModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Share this room with a friend</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Copy the following link and share it with a friend to start a conversation.</p>
+                    <div class="well well-sm text-center" id="link"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
     <script src="//static.opentok.com/v2.2/js/opentok.min.js"></script>
     <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/rxjs/4.0.7/rx.all.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.1/sweetalert.min.js"></script>
+    <script src="https://cdn.socket.io/socket.io-1.4.4.js"></script>
     <script src="/dist/js/chat.js"></script>
     <script src="/dist/js/room.js"></script>
     <script src="/dist/js/dom.js"></script>
     <script type="text/javascript">
         var session = OT.initSession('<%= apiKey %>', '<%= sessid %>');
-        var chat = new Chat('messages', 'msj', '<%= room %>', session);
-        var room = new Room('<%= room %>', '<%= apiKey %>', session, '<%= token %>', chat);
+        var socket = io('/'+'<%= room %>');
+        var chat = new Chat('messages', 'msj', '<%= room %>', session, socket);
+        var room = new Room('<%= room %>', '<%= apiKey %>', session, '<%= token %>', chat, socket);
+        $("#link").html(window.location.href);
     </script>
 </body>
 </html>

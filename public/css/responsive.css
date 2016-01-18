@@ -1,0 +1,11 @@
+/***** Media Queries (Tablet) *****/
+@media only screen and (min-width: 650px) and (max-width: 990px) {
+  #chat {
+      min-height: 75vh;
+      max-height: 75vh;
+  }
+  #chat #messages {
+      max-height:75vh;
+      height:66vh;
+  }
+}

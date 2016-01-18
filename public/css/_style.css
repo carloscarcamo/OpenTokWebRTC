@@ -29,10 +29,9 @@ div#subscribers {
     right: 0px;
     background-color: #5B5B5B;
     width: 300px;
-    min-height: 90vh;
-    max-height: 90vh;
-    bottom: 59px;
-    overflow-y: hidden;
+    min-height: 100%;
+    max-height: 100%;
+    overflow-y: auto;
     display: none;
     z-index: 100;
 }
@@ -50,8 +49,8 @@ div#subscribers {
 
 #chat #messages {
     width: 100%;
-    max-height:calc(95vh - 100px);
-    height:calc(90vh - 100px);
+    max-height:600px;
+    height:500px;
     overflow-y: auto;
     overflow-x: hidden;
 }

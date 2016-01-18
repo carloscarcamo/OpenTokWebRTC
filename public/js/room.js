@@ -1,11 +1,12 @@
-function Room(roomId, apiKey, session, token, Chat) {
+function Room(roomId, apiKey, session, token, Chat, socket) {
   this.roomId = roomId;
   this.apiKey = apiKey;
   this.session = session;
   this.token = token;
   this.Chat = Chat;
-  this.observable = Rx.Observable;
+  this.observable = Rx.Observable; // RxJS Object
   this.Chat = Chat;
+  this.io = socket;
   this.init();
 }
 
@@ -16,7 +17,7 @@ Room.prototype = {
    * Init room session
    */
 
-  init: function() {
+  init: function () {
     var _this = this;
     // check for requirements
     if (OT.checkSystemRequirements() == 1) {
@@ -33,7 +34,7 @@ Room.prototype = {
       var sessionConnected = this.observable.fromEvent(this.session, 'sessionConnected');
       var streamCreated = this.observable.fromEvent(this.session, 'streamCreated');
 
-      // Attach event handlers
+      // Subscribing observables
       sessionConnected.subscribe(function(event) {
         _this.session.publish(publisher);
       });
@@ -47,6 +48,8 @@ Room.prototype = {
       // Connect to the Session using the 'apiKey' of the application and a 'token' for permission
       this.session.connect(this.token);
 
+      this.addUser();
+      this.socketEvents();
     } else {
       // The client does not support WebRTC.
       swal({
@@ -56,5 +59,39 @@ Room.prototype = {
         confirmButtonText: "OK"
       });
     }
+  },
+
+  addUser: function () {
+    this.io.emit('add user', this.token);
+  },
+
+  // events to a RxJS Observable Sequence
+  socketEvents: function () {
+    var login = this.observable.fromEvent(this.io, 'login');
+    var userLeft = this.observable.fromEvent(this.io, 'user left');
+    var userJoined = this.observable.fromEvent(this.io, 'user joined');
+    var full = this.observable.fromEvent(this.io, 'full room');
+
+    // Subscribing observables
+    login.subscribe(function (data) {
+      console.log('active users:', data);
+    });
+
+    userLeft.subscribe(function (data) {
+      console.log('active users:', data.numUsers);
+    });
+
+    userJoined.subscribe(function (data) {
+      console.log('A new user has joined');
+    });
+
+    full.subscribe(function (data) {
+      sweetAlert("Sorry", data, "error");
+      setTimeout(function () {
+        window.location.href="/";
+      }, 500);
+
+    });
+
   }
 };

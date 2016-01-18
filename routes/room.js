@@ -1,13 +1,14 @@
 var express = require('express'),
     router = express.Router(),
-    config = require('../config');
-    /*OpenTok = require('opentok'),
-    opentok = new OpenTok(config.opentok.key, config.opentok.secret);*/
+    config = require('../config'),
+    socket = require('../socket/base');
 
-/* GET home room. */
+/* GET room. */
 router.get('/:room', function(req, res, next) {
   var opentok =  req.app.get('opentok');
-  //console.log(req.params.room);
+
+  socket(req.app.get('io'), req.params.room, res); //socket
+
   var response = function (apiKey, sessid, token ) {
 
     var data = {

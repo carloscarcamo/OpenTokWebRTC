@@ -9,7 +9,9 @@ var app = require('../app'),
     http = require('http'),
     config = require('../config'),
     OpenTok = require('opentok'),
-    opentok = new OpenTok(config.opentok.key, config.opentok.secret);
+    opentok = new OpenTok(config.opentok.key, config.opentok.secret),
+    io = require('socket.io'),
+    socket = require('../socket/base');;
 
 /**
  * Create OpenTok Session
@@ -40,7 +42,8 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
-
+var _io = io(server);
+app.set('io', _io);
 /**
  * Start the express app
  */

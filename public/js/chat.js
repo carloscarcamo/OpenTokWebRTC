@@ -1,12 +1,14 @@
-function Chat (chatView, msjInput, roomId, session) {
+function Chat (chatView, msjInput, roomId, session, socket) {
   _this = this;
   this.roomId = roomId;
   this.session = session;
-  this.observable = Rx.Observable;
+  this.observable = Rx.Observable; // RxJS Object
   this.$chat = $('#'+chatView);
   this.$msj = $('#'+msjInput);
+  this.$chatBtn = $("#displayChat");
   this.messages = [];
   this.peerConnection = undefined;
+  this.io = socket; //socket.io
   this.init();
 }
 
@@ -14,30 +16,35 @@ Chat.prototype = {
   _this: this,
   constructor: Chat,
 
-  init: function() {
-    // register dom events
+  init: function () {
+    // dom events
     this.domEvents();
 
-    // register events
+    // events
     this.events();
-
   },
 
-  setPeerConnection: function(connection) {
+  setPeerConnection: function (connection) {
     this.peerConnection = connection;
   },
 
-  events: function() {
-    var signal = this.observable.fromEvent(this.session, 'signal:chat');
-    signal.subscribe(function(event) {
-        console.log(event.data);
-        _this.newMessage(event.data, 'me');
+  events: function () {
+    // events to a RxJS Observable Sequence
+    var message = this.observable.fromEvent(this.io, 'message');
+
+    message.subscribe(function (data) {
+      console.log(data.message);
+      _this.newMessage(data.message, 'me');
     });
 
   },
 
-  domEvents: function() {
+  domEvents: function () {
+    // Dom events to a RxJS Observable Sequence
     var msjInput = this.observable.fromEvent(this.$msj, 'keyup');
+    var displayChat = this.observable.fromEvent(this.$chatBtn, 'click');
+
+    // Subscribing observables
     msjInput.subscribe(function (e) {
       var code = e.which;
       var msj = $(e.target).val();
@@ -46,57 +53,30 @@ Chat.prototype = {
         _this.sendMenssage(msj);
       }
     });
+
+    displayChat.subscribe(function (e) {
+      $("#chat").toggle();
+    });
   },
 
-  sendMenssage: function(message) {
-    if (this.peerConnection != undefined) {
-      var _data = message;
-      console.log(_data);
-      this.session.signal(
-        {
-          to: this.peerConnection,
-          type: 'chat',
-          data: _data
-        },
-        function (error) {
-          if (error) {
-            console.log("signal error ("+ error.code+ "): " + error.message);
-          } else {
-            console.log('message sent');
-            _this.newMessage(_data, 'peer')
-          }
-        }
-      );
-    } else {
-      swal({
-        title: "Error!",
-        text: "There is no peer to chat!",
-        type: "error",
-        confirmButtonText: "OK"
-      });
-    }
+  sendMenssage: function (message) {
+    this.io.emit('new message', {message: message});
+    _this.newMessage(message, 'peer');
   },
 
-  newMessage: function(data, to) {
-    console.log(data, to);
+  newMessage: function (data, to) {
+    //console.log(data, to);
     var msjContainer = $('<div></div>');
     var msjSubContainer = $('<div></div>');
     var arrow = $('<div></div>');
     var msjText = $('<div></div>');
-    /*var msjSubContainer = document.createElement('div');
-    var arrow = document.createElement('div');
-    var msjText = document.createElement('div');*/
 
     msjContainer.append(msjSubContainer);
     msjSubContainer.append(arrow);
     msjSubContainer.append(msjText);
-
-    /*msjContainer.className = 'col-xs-12';
-    msjText.className = 'msg-content';*/
     msjContainer.addClass('col-xs-12');
     msjText.addClass('msg-content');
 
-    //if(to == 'peer' && this.peerConnection != undefined) {
     if(to == 'peer') {
       msjSubContainer.addClass('msg-publisher');
       arrow.addClass('arrow-right');

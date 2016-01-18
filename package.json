@@ -5,7 +5,7 @@
   "author": "Carlos Carcamo",
   "scripts": {
     "start": "node ./bin/www",
-    "server-dev": "nodemon ./bin/www"
+    "devServer": "nodemon ./bin/www"
   },
   "repository": {
     "type": "git",
@@ -21,11 +21,14 @@
     "cookie-parser": "~1.3.5",
     "debug": "~2.2.0",
     "ejs": "~2.3.3",
+    "events": "^1.1.0",
     "express": "~4.13.1",
+    "lodash": "^4.0.0",
     "morgan": "~1.6.1",
     "opentok": "^2.3.0",
     "serve-favicon": "~2.3.0",
-    "simple-actors": "^2.0.0"
+    "simple-actors": "^2.0.0",
+    "socket.io": "^1.4.4"
   },
   "devDependencies": {
     "del": "^2.2.0",
