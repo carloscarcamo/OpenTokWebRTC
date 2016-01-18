@@ -30,7 +30,7 @@ Chat.prototype = {
 
   events: function () {
     // events to a RxJS Observable Sequence
-    var message = this.observable.fromEvent(this.io, 'message');
+    var message = this.observable.fromEvent(this.io, 'new message');
 
     message.subscribe(function (data) {
       console.log(data.message);

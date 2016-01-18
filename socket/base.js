@@ -9,7 +9,8 @@ var numUsers = 0;
 var socket = function(io, roomId, res) {
   var io = io.of(roomId);
   var addedUser = false;
-  io.removeAllListeners();
+  io.removeAllListeners();  
+  eventEmitter.removeAllListeners();
   io.on('connection', function(socket) {
     socket.removeAllListeners();
     console.log('a user connected to room:', roomId);
@@ -18,14 +19,15 @@ var socket = function(io, roomId, res) {
     }
 
     // when the client emits 'new message', this listens and executes
-    socket.once('new message', function (data) {
+    socket.on('new message', function (data) {
+      console.log(data);
       var actor1 = users[socket.username];
       var actor2 = _.filter(users, function (o) { return !(o[socket.username]==actor1); })[0];
 
       // send a message to actor
       actor1.send(actor2.id, data.message);
 
-      socket.broadcast.emit('message', {
+      socket.broadcast.emit('new message', {
         username: socket.username,
         message: data.message
       });
@@ -45,7 +47,6 @@ var socket = function(io, roomId, res) {
       ++numUsers;
 
       if (numUsers == 2) {
-        eventEmitter.removeListener('actors_messages', actorsMessages);
         eventEmitter.emit('actors_messages', users, socket); // register actors events
       }
 
